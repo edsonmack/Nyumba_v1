@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "963706864773",
+    "project_id": "nyumba-app-2022",
+    "storage_bucket": "nyumba-app-2022.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:963706864773:android:a52f5e4d3106ba2f93d5ec",
+        "android_client_info": {
+          "package_name": "com.example.nyumba"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "963706864773-oiukimq8vb1cpsnjb5r6ivggoqcmuj45.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrkm4-njULL9Kzq6tNvqO-TTwAgAMIy70"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "963706864773-oiukimq8vb1cpsnjb5r6ivggoqcmuj45.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "963706864773-1gjf6kki9e0dg8hk69dd4qdbfm2juvhg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nyumba"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

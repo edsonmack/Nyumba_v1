@@ -1,6 +1,9 @@
+import 'package:auth/auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:nyumba/Screens/Verify_screen.dart';
+import 'package:nyumba/Screens/Out/Verify_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:nyumba/firebase_options.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -174,7 +177,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState!.validate()) {
             Fluttertoast.showToast(
                 msg: "Registration Successful, Proceed to verify email");
@@ -182,6 +185,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const VerifyScreen()));
           }
+
+          await Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform,
+          );
+          final email = emailEditingController.text;
+          final password = passwordEditingController.text;
+
+          final UserCredential = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(email: email, password: password);
+          print(UserCredential);
         },
         child: const Text(
           "Sign Up",
@@ -209,14 +222,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           },
         ),
       ),
-      body: Center(
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Container(
             color: const Color.fromARGB(255, 255, 255, 255),
             child: Form(
                 key: _formKey,
                 child: Padding(
-                  padding: const EdgeInsets.all(36.0),
+                  padding: const EdgeInsets.all(35.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -238,7 +250,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ],
                   ),
                 ))),
-      )),
+      ),
     );
   }
 }

@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:nyumba/Screens/home_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nyumba/Screens/In/home_screen.dart';
+
+import 'cubit/google_sign/google_sign_in_cubit.dart';
 
 /*Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -8,6 +11,7 @@ import 'package:nyumba/Screens/home_screen.dart';
   runApp(const MyApp());
 }*/
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -17,12 +21,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Email and password login ',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
+    return BlocProvider(
+      create: (context) => GoogleSignInCubit(),
+      child: MaterialApp(
+        home: const HomeScreen(),
+        title: 'Email and password login ',
+        theme: ThemeData(
+          primarySwatch: Colors.red,
+        ),
       ),
-      home: const HomeScreen(),
     );
   }
 }

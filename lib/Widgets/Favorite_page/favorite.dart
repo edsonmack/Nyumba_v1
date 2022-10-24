@@ -19,14 +19,14 @@ Widget savedList() {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const Text('Winners Hostel'),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 children: const [
                   Icon(Icons.location_pin),
                   Text('KM, Nairobi'),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 children: const [
                   Icon(Icons.bed),
@@ -34,19 +34,19 @@ Widget savedList() {
                   Text('bed-sitter 2 sharing'),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Container(
-                child: const Center(
-                    child: Text(
-                  'Book',
-                  style: TextStyle(color: (Colors.white)),
-                )),
                 height: 30,
                 width: 100,
                 decoration: BoxDecoration(
-                  color: Color.fromRGBO(4, 36, 47, 100),
+                  color: const Color.fromRGBO(4, 36, 47, 100),
                   borderRadius: BorderRadius.circular(5),
                 ),
+                child: const Center(
+                    child: Text(
+                  'View',
+                  style: TextStyle(color: (Colors.white)),
+                )),
               ),
             ]),
           )

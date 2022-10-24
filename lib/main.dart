@@ -1,7 +1,6 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nyumba/Screens/In/home_screen.dart';
+import 'package:nyumba/Screens/Out/home_screen.dart';
 
 import 'cubit/google_sign/google_sign_in_cubit.dart';
 

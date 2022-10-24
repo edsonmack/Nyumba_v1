@@ -1,11 +1,11 @@
+// ignore_for_file: use_build_context_synchronously, file_names
+
 import 'package:auth/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class ResetPassword extends StatefulWidget {
-  ResetPassword({Key? key}) : super(key: key);
+  const ResetPassword({Key? key}) : super(key: key);
 
   @override
   State<ResetPassword> createState() => _ResetPasswordState();
@@ -52,6 +52,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value)) {
           return ("Please enter a valid email");
         }
+        return null;
       },
       onSaved: (value) {
         emailcontroller.text = value!;

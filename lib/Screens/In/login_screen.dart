@@ -1,4 +1,3 @@
-import 'package:color/color.dart';
 import 'package:flutter/material.dart';
 import 'package:nyumba/Screens/In/bookings.dart';
 import 'package:nyumba/Screens/In/favorite_screen.dart';
@@ -14,7 +13,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   int currentIndex = 0;
-  final screens = [HomePage(), Favorite(), Bookings(), Profile()];
+  final screens = const [HomePage(), Favorite(), Bookings(), Profile()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nyumba/Widgets/Favorite_page/favorite.dart';
 import 'package:nyumba/Widgets/Profile_page/buttons.dart';
 
 class Profile extends StatefulWidget {
@@ -25,7 +26,8 @@ class _ProfileState extends State<Profile> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context)
+                .pop(MaterialPageRoute(builder: (context) => savedList()));
           },
         ),
       ),

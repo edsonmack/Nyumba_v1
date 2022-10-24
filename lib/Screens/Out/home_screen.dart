@@ -3,13 +3,11 @@
 import 'package:auth/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nyumba/Screens/In/login_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nyumba/firebase_options.dart';
-import '../../cubit/google_sign/google_sign_in_cubit.dart';
-import '../Out/Registration_screen.dart';
-import '../Out/Reset_password.dart';
+import 'Registration_screen.dart';
+import 'Reset_password.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -36,15 +34,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final googleAccount = await googleSignIn.signIn();
 
     if (googleAccount != null) {
-      final GoogleAuth = await googleAccount.authentication;
-      if (GoogleAuth.accessToken != null && GoogleAuth.idToken != null)
+      final googleAuth = await googleAccount.authentication;
+      if (googleAuth.accessToken != null && googleAuth.idToken != null)
+        // ignore: curly_braces_in_flow_control_structures
         try {
           await FirebaseAuth.instance.signInWithCredential(
               GoogleAuthProvider.credential(
-                  idToken: GoogleAuth.idToken,
-                  accessToken: GoogleAuth.accessToken));
-        } on FirebaseException catch (error) {
-        } catch (error) {
+                  idToken: googleAuth.idToken,
+                  accessToken: googleAuth.accessToken));
         } finally {}
     }
   }
@@ -63,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]").hasMatch(value)) {
           return ("Please enter a valid email");
         }
+        return null;
       },
       onSaved: (value) {
         emailcontroller.text = value!;
@@ -184,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         context,
                                         MaterialPageRoute(
                                             builder: ((context) =>
-                                                ResetPassword())));
+                                                const ResetPassword())));
                                   },
                                   child: const Text(
                                     "Forgot Password?",

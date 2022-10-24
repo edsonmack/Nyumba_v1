@@ -1,6 +1,7 @@
 import 'package:auth/auth.dart';
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
 
 part 'google_sign_in_state.dart';
 

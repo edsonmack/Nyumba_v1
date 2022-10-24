@@ -12,14 +12,14 @@ Widget pendingPage() {
     const SizedBox(width: 5),
     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       const Text('Winners Hostel'),
-      SizedBox(height: 5),
+      const SizedBox(height: 5),
       Row(
         children: const [
           Icon(Icons.location_pin),
           Text('KM, Nairobi'),
         ],
       ),
-      SizedBox(height: 5),
+      const SizedBox(height: 5),
       Row(
         children: const [
           Icon(Icons.bed),
@@ -27,7 +27,7 @@ Widget pendingPage() {
           Text('bed-sitter 2 sharing'),
         ],
       ),
-      SizedBox(height: 5),
+      const SizedBox(height: 5),
       Row(
         children: const [
           Text('Request No: 21028'),
@@ -35,7 +35,7 @@ Widget pendingPage() {
           Icon(Icons.copy),
         ],
       ),
-      SizedBox(height: 5),
+      const SizedBox(height: 5),
       Row(
         children: const [
           Icon(Icons.message_rounded),

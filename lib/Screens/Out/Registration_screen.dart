@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:auth/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -105,6 +107,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         if (value!.isEmpty) {
           return ("please enter Category");
         }
+        return null;
       },
       onSaved: (value) {
         categoryEditingController.text = value!;
@@ -192,9 +195,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           final email = emailEditingController.text;
           final password = passwordEditingController.text;
 
-          final UserCredential = await FirebaseAuth.instance
+          final userCredential = await FirebaseAuth.instance
               .createUserWithEmailAndPassword(email: email, password: password);
-          print(UserCredential);
+          // ignore: avoid_print
+          print(userCredential);
         },
         child: const Text(
           "Sign Up",

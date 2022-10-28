@@ -1,22 +1,25 @@
-// ignore: file_names
+// ignore_for_file: file_names
 
 import 'package:auth/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:nyumba/Screens/In/login_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:nyumba/Screens/In/bottomNavigator.dart';
 import 'package:nyumba/firebase_options.dart';
 import 'Registration_screen.dart';
 import 'Reset_password.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _LoginScreenState extends State<LoginScreen> {
+  bool showSpinner = false;
+  // scaffold state
+
 // form screen for validating email and password
 
   final _formKey = GlobalKey<FormState>();
@@ -105,12 +108,28 @@ class _HomeScreenState extends State<HomeScreen> {
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
-        onPressed: () {
+        onPressed: () async {
+          setState(() {
+            showSpinner = true;
+          });
+
           if (_formKey.currentState!.validate()) {
             Fluttertoast.showToast(msg: "Login Successful");
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const LoginScreen()));
+                MaterialPageRoute(builder: (context) => const BottomNav()));
           }
+          await Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform,
+          );
+          final email = emailcontroller.text;
+          final password = passwordcontroller.text;
+
+          final userCredential = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(email: email, password: password);
+          print(userCredential);
+          // ignore: nullable_type_in_catch_clause
+
+          // ignore: avoid_print
         },
         child: const Text(
           "Login",

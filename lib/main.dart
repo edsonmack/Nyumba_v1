@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nyumba/Screens/Out/home_screen.dart';
+import 'package:nyumba/Screens/Out/Login_screen.dart';
 
 import 'cubit/google_sign/google_sign_in_cubit.dart';
 
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => GoogleSignInCubit(),
       child: MaterialApp(
-        home: const HomeScreen(),
+        home: const LoginScreen(),
         title: 'Email and password login ',
         theme: ThemeData(
           primarySwatch: Colors.red,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nyumba/Widgets/Favorite_page/favorite.dart';
-import 'package:nyumba/Widgets/Profile_page/buttons.dart';
+import 'package:nyumba/Screens/In/bottomNavigator.dart';
+import 'package:nyumba/Screens/In/newListing.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -11,6 +11,26 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   int counter = 0;
+  // buttons widget
+  Widget buttons(IconData icon, String? text) {
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.black)),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20.0),
+        child: Row(
+          children: [
+            Icon(icon),
+            const SizedBox(width: 10),
+            Text('$text'),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,8 +46,8 @@ class _ProfileState extends State<Profile> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.of(context)
-                .pop(MaterialPageRoute(builder: (context) => savedList()));
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const BottomNav()));
           },
         ),
       ),
@@ -73,7 +93,12 @@ class _ProfileState extends State<Profile> {
               ],
             ),
             const SizedBox(height: 10),
-            buttons((Icons.chat_sharp), 'Chat with us?'),
+            GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const NewListings()));
+                },
+                child: buttons((Icons.add), 'Create new listings')),
             const SizedBox(
               height: 20,
             ),

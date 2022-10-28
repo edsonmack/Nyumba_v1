@@ -1,22 +1,26 @@
+// ignore_for_file: file_names, duplicate_ignore
+
 import 'package:flutter/material.dart';
 import 'package:nyumba/Screens/In/bookings.dart';
 import 'package:nyumba/Screens/In/favorite_screen.dart';
 import 'package:nyumba/Screens/In/home_page.dart';
 import 'package:nyumba/Screens/In/profile_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class BottomNav extends StatefulWidget {
+  const BottomNav({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<BottomNav> createState() => _BottomNavScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _BottomNavScreenState extends State<BottomNav> {
   int currentIndex = 0;
   final screens = const [HomePage(), Favorite(), Bookings(), Profile()];
+  final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
       body: screens[currentIndex],
       backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(

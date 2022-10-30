@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:auth/auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nyumba/Screens/Out/Verify_screen.dart';
@@ -17,6 +18,9 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   // form key
   final _formKey = GlobalKey<FormState>();
+
+  // adding data to database
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   // Editing controller
   final emailEditingController = TextEditingController();
@@ -182,11 +186,35 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            Fluttertoast.showToast(
-                msg: "Registration Successful, Proceed to verify email");
+            /*    Map<String, dynamic> data = {
+              'Email': emailEditingController.text,
+              'First name': firstNameEditingController.text,
+              'Second name': lastNameEditingController.text,
+              'Category': categoryEditingController.text,
+              'Password': passwordEditingController.text,
+            };
+            */
+            await users.add({
+              'Email': emailEditingController.text,
+              'First name': firstNameEditingController.text,
+              'Second name': lastNameEditingController.text,
+              'Category': categoryEditingController.text,
+              'Password': passwordEditingController.text
+            }).then((value) => print('user added'));
+            //FirebaseFirestore.instance.collection('users').add(data);
+            /*{
+              'Email': emailEditingController.text,
+              'First name': firstNameEditingController.text,
+              'Second name': lastNameEditingController.text,
+              'Category': categoryEditingController.text,
+              'Password': passwordEditingController.text,
+            });
+            */
 
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const VerifyScreen()));
+            Fluttertoast.showToast(
+                msg: "Registration Successful, Proceed to verify email");
           }
 
           await Firebase.initializeApp(

@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:nyumba/Screens/In/locationPage.dart';
 
 import 'package:nyumba/Screens/In/profile_screen.dart';
@@ -13,6 +17,40 @@ class NewListings extends StatefulWidget {
 
 class _NewListingsState extends State<NewListings> {
   final _formKey2 = GlobalKey<FormState>();
+
+  // Image picker global file variable
+
+//  File? _image;
+
+  // Function that receives Image
+  /* Future _pickImage(ImageSource source) async {
+    final image = await ImagePicker().pickImage(source: source);
+    try {
+      if (image == null) return;
+      File? img = File(image.path);
+      setState(() {
+        _image = img;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      Navigator.of(context).pop();
+    }
+  }
+*/
+// Image picker object
+  final ImagePicker imagePicker = ImagePicker();
+
+  // array receiving list of files
+  List<XFile>? imageFileList = [];
+
+// methof for selecting images
+  void selectImages() async {
+    final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+    if (selectedImages!.isNotEmpty) {
+      imageFileList!.addAll(selectedImages);
+    }
+    setState(() {});
+  }
 
   // Category facility list
   final categoryList = ['Hostel', 'Appartment', 'House'];
@@ -32,6 +70,14 @@ class _NewListingsState extends State<NewListings> {
   final nameController = TextEditingController();
   final rentController = TextEditingController();
   final descriptionController = TextEditingController();
+
+  // Checkbox values Initialization
+  bool? checkBoxValue1 = false;
+  bool? checkBoxValue2 = false;
+  bool? checkBoxValue3 = false;
+  bool? checkBoxValue4 = false;
+  bool? checkBoxValue5 = false;
+  bool? checkBoxValue6 = false;
 
   // Accomodation name textfield widget
   Widget accomodationName() {
@@ -143,7 +189,11 @@ class _NewListingsState extends State<NewListings> {
   // Description widget
   Widget descriptionOption() {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.only(
+        left: 20.0,
+        right: 20,
+        top: 20,
+      ),
       child: TextFormField(
         controller: descriptionController,
         keyboardType: TextInputType.multiline,
@@ -154,6 +204,251 @@ class _NewListingsState extends State<NewListings> {
           border: OutlineInputBorder(),
         ),
       ),
+    );
+  }
+
+// check box widget
+
+  // What this place offers available (check boxOptions)
+  Widget commonFacilities() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                'What this place offers',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // checkbox1
+              Checkbox(
+                tristate: true,
+                value: checkBoxValue1,
+                onChanged: (val) {
+                  setState(() {
+                    checkBoxValue1 = val;
+                  });
+                },
+              ),
+              const Icon(Icons.pets_outlined),
+
+              const Text("Pets allowed"),
+              // checkbox 2
+              Checkbox(
+                tristate: true,
+                value: checkBoxValue2,
+                onChanged: (val) {
+                  setState(() {
+                    checkBoxValue2 = val;
+                  });
+                },
+              ),
+              const Icon(Icons.wifi),
+
+              const Text("Wifi")
+            ],
+          ),
+          // second row checkbox options
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // checkbox1
+              Checkbox(
+                tristate: true,
+                value: checkBoxValue3,
+                onChanged: (val) {
+                  setState(() {
+                    checkBoxValue3 = val;
+                  });
+                },
+              ),
+              const Icon(Icons.camera_indoor_outlined),
+
+              const Text("CCTV Surveillance"),
+              // checkbox 2
+              Checkbox(
+                tristate: true,
+                value: checkBoxValue4,
+                onChanged: (val) {
+                  setState(() {
+                    checkBoxValue4 = val;
+                  });
+                },
+              ),
+              const Icon(Icons.balcony),
+
+              const Text("Balcony")
+            ],
+          ),
+
+          // Third row checkbox Options
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // checkbox1
+              Checkbox(
+                tristate: true,
+                value: checkBoxValue5,
+                onChanged: (val) {
+                  setState(() {
+                    checkBoxValue5 = val;
+                  });
+                },
+              ),
+              const Icon(Icons.chair_rounded),
+
+              const Text("Fully furnitured "),
+              // checkbox 2
+              Checkbox(
+                tristate: true,
+                value: checkBoxValue6,
+                onChanged: (val) {
+                  setState(() {
+                    checkBoxValue6 = val;
+                  });
+                },
+              ),
+              const Icon(Icons.hot_tub),
+
+              const Text("Hot shower")
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  // Image previewer container
+  Widget imagePreviewer() {
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blueGrey),
+        ),
+        height: 150,
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: GridView.builder(
+                  itemCount: imageFileList!.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return Image.file(
+                      File(imageFileList![index].path),
+                      fit: BoxFit.cover,
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Photo widget container
+  Widget photoContainer() {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            selectImages();
+          }, // _pickImage(ImageSource.gallery),
+          child: Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              Container(
+                height: 200,
+                width: 350,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blueGrey),
+                ),
+              ),
+              Column(
+                children: const [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Color.fromARGB(255, 209, 204, 204),
+                    child: Icon(
+                      Icons.add_a_photo,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Add Photos',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  SizedBox(height: 40),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Row(
+            children: [
+              //imagePreviewer(FileImage(_image!)),
+              const SizedBox(width: 10.0),
+              // imagePreviewer(),
+              const SizedBox(width: 10.0),
+              //imagePreviewer(),
+            ],
+          ),
+        ),
+        const Text(
+          'Preview Images',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+      ],
+    );
+  }
+
+  // submit and cancel buttons
+  Widget submitButtons() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Container(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 80.0),
+              child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey,
+                  ),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.black),
+                  )),
+            )),
+            const SizedBox(width: 10.0),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromRGBO(4, 36, 47, 100)),
+              child: const Text('Submit'),
+            ),
+          ],
+        ),
+        SizedBox(height: 8)
+      ],
     );
   }
 
@@ -190,6 +485,10 @@ class _NewListingsState extends State<NewListings> {
                   roomType(),
                   locationOption(),
                   descriptionOption(),
+                  commonFacilities(),
+                  photoContainer(),
+                  imagePreviewer(),
+                  submitButtons(),
                 ],
               )),
         ),

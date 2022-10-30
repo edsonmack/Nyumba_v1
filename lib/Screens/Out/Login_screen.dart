@@ -237,16 +237,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: <Widget>[
                                 GestureDetector(
                                   onTap: () {
-                                    final user =
+                                    /*  final user =
                                         FirebaseAuth.instance.currentUser;
                                     if (user?.emailVerified ?? false) {
                                     } else {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: ((context) =>
-                                                  const RegistrationScreen())));
-                                    }
+                                      
+                                    }*/
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: ((context) =>
+                                                const RegistrationScreen())));
                                   },
                                   child: const Text(
                                     "Create Account Instead?",

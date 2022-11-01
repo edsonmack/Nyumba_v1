@@ -4,7 +4,7 @@ import 'package:auth/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:nyumba/Screens/In/bottomNavigator.dart';
+
 import 'package:nyumba/firebase_options.dart';
 import 'Registration_screen.dart';
 import 'Reset_password.dart';
@@ -29,6 +29,19 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailcontroller = TextEditingController();
   final TextEditingController passwordcontroller = TextEditingController();
 
+// Sign in method
+  Future signIn() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailcontroller.text.trim(),
+          password: passwordcontroller.text.trim());
+      Fluttertoast.showToast(msg: "Login Successful");
+    } on FirebaseException catch (e) {
+      if (e.code == 'user not found' || e.code == 'wrong-password') {
+        Fluttertoast.showToast(msg: "Incorrect username or password");
+      }
+    }
+  }
   // firebase authenticator
 
   // google sign Method
@@ -47,6 +60,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   accessToken: googleAuth.accessToken));
         } finally {}
     }
+  }
+
+  // progress widget
+
+  @override
+  void dispose() {
+    emailcontroller.dispose();
+    passwordcontroller.dispose();
+    super.dispose();
   }
 
   @override
@@ -108,25 +130,21 @@ class _LoginScreenState extends State<LoginScreen> {
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
-        onPressed: () async {
-          setState(() {
-            showSpinner = true;
-          });
+        onPressed: () {
+          showSpinner = true;
 
           if (_formKey.currentState!.validate()) {
-            Fluttertoast.showToast(msg: "Login Successful");
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const BottomNav()));
+            signIn();
           }
-          await Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          );
-          final email = emailcontroller.text;
-          final password = passwordcontroller.text;
+          // await Firebase.initializeApp(
+          // options: DefaultFirebaseOptions.currentPlatform,
+          // );
+          // final email = emailcontroller.text;
+          //final password = passwordcontroller.text;
 
-          final userCredential = await FirebaseAuth.instance
-              .signInWithEmailAndPassword(email: email, password: password);
-          print(userCredential);
+          //final userCredential = await FirebaseAuth.instance
+          //  .signInWithEmailAndPassword(email: email, password: password);
+          //print(userCredential);
           // ignore: nullable_type_in_catch_clause
 
           // ignore: avoid_print
@@ -180,6 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Container(
                   color: const Color.fromARGB(255, 255, 255, 255),
                   child: Form(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       key: _formKey,
                       child: Padding(
                         padding: const EdgeInsets.all(36.0),

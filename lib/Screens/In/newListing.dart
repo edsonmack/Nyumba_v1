@@ -17,7 +17,7 @@ class NewListings extends StatefulWidget {
 
 class _NewListingsState extends State<NewListings> {
   final _formKey2 = GlobalKey<FormState>();
-
+  // ListingModel listingObject = ListingModel
   // Image picker global file variable
 
 //  File? _image;

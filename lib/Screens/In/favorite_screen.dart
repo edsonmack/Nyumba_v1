@@ -79,13 +79,6 @@ class _FavoriteState extends State<Favorite> {
             ),
           ),
           backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const BottomNav()));
-            },
-          ),
         ),
         body: savedList());
   }

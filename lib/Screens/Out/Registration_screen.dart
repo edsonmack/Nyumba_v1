@@ -2,11 +2,9 @@
 
 import 'package:auth/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:nyumba/Screens/Out/Verify_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:nyumba/firebase_options.dart';
+import 'package:nyumba/Screens/Out/Verify_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -22,6 +20,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   // adding data to database
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
+  // drop down button
+  final regCategory = ['Student', 'Landlord'];
+  String? selectedval11 = 'Student';
+
   // Editing controller
   final emailEditingController = TextEditingController();
   final firstNameEditingController = TextEditingController();
@@ -31,8 +33,48 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final retypePasswordEditingController = TextEditingController();
 
   // Drop down menu state
-  List<String> items = ['Category', 'Student', 'Landlord'];
-  String? selectedItem = 'Category';
+  // List<String> items = ['Category', 'Student', 'Landlord'];
+  //String? selectedItem = 'Category';
+
+  // Add user method
+  Future addUser() async {
+    await users.add({
+      'Email': emailEditingController.text,
+      'First name': firstNameEditingController.text,
+      'Second name': lastNameEditingController.text,
+      'Category': selectedval11,
+      'Password': passwordEditingController.text
+    }).then((value) => print('user added'));
+  }
+
+  Future createUser() async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailEditingController.text,
+          password: passwordEditingController.text);
+      addUser();
+      return const VerifyScreen();
+    } on FirebaseException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        Fluttertoast.showToast(msg: 'Email is already in use');
+        return const RegistrationScreen();
+      }
+    }
+  }
+
+  // disposing fields to save memmory
+  @override
+  void dispose() {
+    emailEditingController.dispose();
+    firstNameEditingController.dispose();
+    lastNameEditingController.dispose();
+    categoryEditingController.dispose();
+    passwordEditingController.dispose();
+    retypePasswordEditingController.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // email field
@@ -64,9 +106,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final firstNameField = TextFormField(
       autofocus: false,
       controller: firstNameEditingController,
+
       //validator: ,
       validator: (value) {
-        if (value!.isEmpty) {
+        if (value!.isEmpty || !RegExp(r'^[a-z A-Z]').hasMatch(value)) {
           return ("please enter your first name");
         } else {
           return null;
@@ -87,7 +130,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       controller: lastNameEditingController,
       //validator: ,
       validator: (value) {
-        if (value!.isEmpty) {
+        if (value!.isEmpty || !RegExp(r'^[a-z A-Z]').hasMatch(value)) {
           return ("please enter your last name");
         } else {
           return null;
@@ -103,7 +146,28 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
     );
 
-    final categoryField = TextFormField(
+// category Drop down button
+    final categoryDropdown = DropdownButtonFormField(
+      value: selectedval11,
+      items: regCategory
+          .map((e) => DropdownMenuItem(
+                value: e,
+                child: Text(e),
+              ))
+          .toList(),
+      onChanged: (val) {
+        setState(() {
+          selectedval11 = val! as String;
+        });
+      },
+      icon: Icon(Icons.arrow_drop_down_circle),
+      decoration: InputDecoration(
+        labelText: 'Category',
+        border: OutlineInputBorder(),
+      ),
+    );
+
+    /* final categoryField = TextFormField(
       autofocus: false,
       controller: categoryEditingController,
       //validator: ,
@@ -122,6 +186,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           hintText: "Category",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
     );
+    */
 
     final passwordField = TextFormField(
       autofocus: false,
@@ -186,47 +251,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            /*    Map<String, dynamic> data = {
-              'Email': emailEditingController.text,
-              'First name': firstNameEditingController.text,
-              'Second name': lastNameEditingController.text,
-              'Category': categoryEditingController.text,
-              'Password': passwordEditingController.text,
-            };
-            */
-            await users.add({
-              'Email': emailEditingController.text,
-              'First name': firstNameEditingController.text,
-              'Second name': lastNameEditingController.text,
-              'Category': categoryEditingController.text,
-              'Password': passwordEditingController.text
-            }).then((value) => print('user added'));
-            //FirebaseFirestore.instance.collection('users').add(data);
-            /*{
-              'Email': emailEditingController.text,
-              'First name': firstNameEditingController.text,
-              'Second name': lastNameEditingController.text,
-              'Category': categoryEditingController.text,
-              'Password': passwordEditingController.text,
-            });
-            */
-
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const VerifyScreen()));
-            Fluttertoast.showToast(
-                msg: "Registration Successful, Proceed to verify email");
+            createUser();
           }
-
-          await Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          );
-          final email = emailEditingController.text;
-          final password = passwordEditingController.text;
-
-          final userCredential = await FirebaseAuth.instance
-              .createUserWithEmailAndPassword(email: email, password: password);
-          // ignore: avoid_print
-          print(userCredential);
         },
         child: const Text(
           "Sign Up",
@@ -259,6 +285,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             color: const Color.fromARGB(255, 255, 255, 255),
             child: Form(
                 key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Padding(
                   padding: const EdgeInsets.all(35.0),
                   child: Column(
@@ -272,7 +299,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       const SizedBox(height: 20),
                       lastNameField,
                       const SizedBox(height: 20),
-                      categoryField,
+                      categoryDropdown,
                       const SizedBox(height: 20),
                       passwordField,
                       const SizedBox(height: 20),

@@ -1,3 +1,4 @@
+import 'package:auth/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nyumba/Screens/In/bottomNavigator.dart';
 import 'package:nyumba/Screens/In/newListing.dart';
@@ -10,7 +11,14 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+// sign out method
+  Future sign_out() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
+  // counter
   int counter = 0;
+
   // buttons widget
   Widget buttons(IconData icon, String? text) {
     return Container(
@@ -128,7 +136,12 @@ class _ProfileState extends State<Profile> {
             const SizedBox(
               height: 15,
             ),
-            buttons(Icons.logout, 'Sign Out')
+            GestureDetector(
+              onTap: () {
+                sign_out();
+              },
+              child: buttons(Icons.logout, 'Sign Out'),
+            ),
           ],
         ),
       ),

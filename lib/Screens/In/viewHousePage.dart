@@ -16,13 +16,6 @@ class _ViewButtonState extends State<ViewButton> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('house details'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const BottomNav()));
-          },
-        ),
       ),
       backgroundColor: Colors.white,
       body: SafeArea(

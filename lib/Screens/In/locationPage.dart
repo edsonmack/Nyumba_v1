@@ -1,5 +1,4 @@
-// ignore: file_names
-// ignore_for_file: file_names, duplicate_ignore
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,7 +22,7 @@ class _LocationPageState extends State<LocationPage> {
   static const CameraPosition initialCameraPosition =
       CameraPosition(target: LatLng(37.42796, 122.08574), zoom: 14.0);
 
-  late GoogleMapController googleMapController;
+  late Completer<GoogleMapController> _controller = Completer();
   final Mode _mode = Mode.overlay;
 
   Set<Marker> markerList = {};
@@ -40,7 +39,7 @@ class _LocationPageState extends State<LocationPage> {
             markers: markerList,
             mapType: MapType.normal,
             onMapCreated: (GoogleMapController controller) {
-              googleMapController = controller;
+              _controller.complete(controller);
             },
           ),
           ElevatedButton(
@@ -92,6 +91,7 @@ class _LocationPageState extends State<LocationPage> {
         infoWindow: InfoWindow(title: detail.result.name)));
 
     setState(() {});
+    final GoogleMapController googleMapController = await _controller.future;
     googleMapController
         .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
   }

@@ -11,6 +11,12 @@ class VerifyScreen extends StatefulWidget {
 }
 
 class _VerifyScreenState extends State<VerifyScreen> {
+  // send email verification method
+  Future sendVerif() async {
+    final user = FirebaseAuth.instance.currentUser;
+    await user?.sendEmailVerification();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,15 +35,26 @@ class _VerifyScreenState extends State<VerifyScreen> {
               Navigator.of(context).pop();
             }),
       ),
-      body: Column(children: [
-        const Text('please verify your email address'),
-        TextButton(
-            onPressed: () async {
-              final user = FirebaseAuth.instance.currentUser;
-              await user?.sendEmailVerification();
-            },
-            child: const Text('send email verification'))
-      ]),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(children: [
+          const Text(
+            'Click the button below to verify your email address',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 10),
+          ElevatedButton(
+              onPressed: () {
+                sendVerif();
+                const snackbar = SnackBar(
+                    content: Text("Email sent, kindly check your email",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)));
+                ScaffoldMessenger.of(context).showSnackBar(snackbar);
+              },
+              child: const Text('send email verification'))
+        ]),
+      ),
     );
   }
 }

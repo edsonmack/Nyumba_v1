@@ -2,9 +2,12 @@
 
 import 'package:auth/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nyumba/Screens/Out/Verify_screen.dart';
+import 'package:nyumba/cubit/google_sign/google_sign_in_cubit.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -19,6 +22,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   // adding data to database
   CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+  // firebase firestore reference
+  FirebaseFirestore fstore = FirebaseFirestore.instance;
+
+  // user id
+  String? userID;
+
+  // Document reference
+  //DocumentReference documentReference =
+  //   FirebaseFirestore.instance.collection('users').doc('userID');
 
   // drop down button
   final regCategory = ['Student', 'Landlord'];
@@ -36,9 +49,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   // List<String> items = ['Category', 'Student', 'Landlord'];
   //String? selectedItem = 'Category';
 
+  // firebase auth
+
+  //Function to get current user Id
+  // final userCurrent = FirebaseAuth.instance.currentUser!.uid;
+
   // Add user method
   Future addUser() async {
-    await users.add({
+    await users.doc(userID).set({
       'Email': emailEditingController.text,
       'First name': firstNameEditingController.text,
       'Second name': lastNameEditingController.text,
@@ -52,6 +70,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailEditingController.text,
           password: passwordEditingController.text);
+      userID = FirebaseAuth.instance.currentUser!.uid;
       addUser();
       Fluttertoast.showToast(msg: 'Registration successful');
       Navigator.of(context)

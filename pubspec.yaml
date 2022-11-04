@@ -46,8 +46,11 @@ dependencies:
   google_api_headers: ^1.5.0
   google_maps_webservice: ^0.0.19
   image_picker: ^0.8.6
-  mobx: ^2.0.7+7
-  flutter_mobx: ^2.0.6+3
+  mobx: ^2.1.1
+  modal_progress_hud_nsn: ^0.3.0
+  firebase_storage: ^10.3.11
+  geocoding: ^2.0.5
+  
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -58,8 +61,7 @@ http: ^0.13.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.2.1
-  mobx_codegen: ^2.0.7+2
+
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -79,8 +81,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:nyumba/Screens/In/locationPage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:nyumba/Screens/In/profile_screen.dart';
 
@@ -41,15 +44,44 @@ class _NewListingsState extends State<NewListings> {
   final ImagePicker imagePicker = ImagePicker();
 
   // array receiving list of files
-  List<XFile>? imageFileList = [];
+  List<File> imageFileList = [];
 
-// methof for selecting images
+  // Download urls
+  List<String> downloadUrls = [];
+
+  // array for storing files
+  //File? imageFileList;
+
+  // Method for uploading images
+  Future<String> uploadFile(File file) async {
+    final metadata = SettableMetadata(contentType: 'images/jpg');
+    final storageRef = FirebaseStorage.instance.ref();
+    Reference ref =
+        storageRef.child('images/${DateTime.now().microsecondsSinceEpoch}.jpg');
+    final uploadTask = ref.putFile(file, metadata);
+
+    final taskSnapshot = await uploadTask.whenComplete(() => null);
+    String url = await taskSnapshot.ref.getDownloadURL();
+    return url;
+  }
+
+// method for selecting images
   void selectImages() async {
-    final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
-    if (selectedImages!.isNotEmpty) {
-      imageFileList!.addAll(selectedImages);
+    final List<XFile> selectedImages = await imagePicker.pickMultiImage();
+    if (selectedImages.isNotEmpty) {
+      selectedImages.forEach((e) {
+        imageFileList.add(File(e.path));
+      });
     }
     setState(() {});
+  }
+
+  // method for storing photos to firestore
+  storeEntry(List<String> imageUrls) {
+    FirebaseFirestore.instance
+        .collection('Listings')
+        .add({'imageUrl': imageUrls}).then(
+            (value) => {Fluttertoast.showToast(msg: 'successful')});
   }
 
   // Category facility list
@@ -340,13 +372,13 @@ class _NewListingsState extends State<NewListings> {
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: GridView.builder(
-                  itemCount: imageFileList!.length,
+                  itemCount: imageFileList.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                   ),
                   itemBuilder: (BuildContext context, int index) {
                     return Image.file(
-                      File(imageFileList![index].path),
+                      File(imageFileList[index].path),
                       fit: BoxFit.cover,
                     );
                   },
@@ -440,7 +472,16 @@ class _NewListingsState extends State<NewListings> {
             )),
             const SizedBox(width: 10.0),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                for (int i = 0; i < imageFileList.length; i++) {
+                  String url = await uploadFile(imageFileList[i]);
+                  downloadUrls.add(url);
+
+                  if (i == imageFileList.length - 1) {
+                    storeEntry(downloadUrls);
+                  }
+                }
+              },
               style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(4, 36, 47, 100)),
               child: const Text('Submit'),

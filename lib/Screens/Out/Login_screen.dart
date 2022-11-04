@@ -4,7 +4,8 @@ import 'package:auth/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:nyumba/Screens/In/bottomNavigator.dart';
 import 'package:nyumba/firebase_options.dart';
 import 'Registration_screen.dart';
 import 'Reset_password.dart';
@@ -131,11 +132,10 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () {
-          showSpinner = true;
-
           if (_formKey.currentState!.validate()) {
             signIn();
           }
+
           // await Firebase.initializeApp(
           // options: DefaultFirebaseOptions.currentPlatform,
           // );
@@ -188,104 +188,107 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
+      body: ModalProgressHUD(
+        inAsyncCall: showSpinner,
+        child: FutureBuilder(
+          future: Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform,
+          ),
+          builder: (context, snapshot) {
+            return SingleChildScrollView(
+              child: Center(
+                child: Container(
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                    child: Form(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        key: _formKey,
+                        child: Padding(
+                          padding: const EdgeInsets.all(36.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              const SizedBox(height: 5),
+                              emailField,
+                              const SizedBox(height: 45),
+                              passwordField,
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: ((context) =>
+                                                  const ResetPassword())));
+                                    },
+                                    child: const Text(
+                                      "Forgot Password?",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              loginButton,
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Text(
+                                    "Or",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              (continueWithGoogleButton),
+                              const SizedBox(height: 30),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () {
+                                      /*  final user =
+                                          FirebaseAuth.instance.currentUser;
+                                      if (user?.emailVerified ?? false) {
+                                      } else {
+                                        
+                                      }*/
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: ((context) =>
+                                                  const RegistrationScreen())));
+                                    },
+                                    child: const Text(
+                                      "Create Account Instead?",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.blue,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ))),
+              ),
+            );
+          },
         ),
-        builder: (context, snapshot) {
-          return SingleChildScrollView(
-            child: Center(
-              child: Container(
-                  color: const Color.fromARGB(255, 255, 255, 255),
-                  child: Form(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      key: _formKey,
-                      child: Padding(
-                        padding: const EdgeInsets.all(36.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            const SizedBox(height: 5),
-                            emailField,
-                            const SizedBox(height: 45),
-                            passwordField,
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: ((context) =>
-                                                const ResetPassword())));
-                                  },
-                                  child: const Text(
-                                    "Forgot Password?",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                      color: Colors.blue,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            loginButton,
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const <Widget>[
-                                Text(
-                                  "Or",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            (continueWithGoogleButton),
-                            const SizedBox(height: 30),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () {
-                                    /*  final user =
-                                        FirebaseAuth.instance.currentUser;
-                                    if (user?.emailVerified ?? false) {
-                                    } else {
-                                      
-                                    }*/
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: ((context) =>
-                                                const RegistrationScreen())));
-                                  },
-                                  child: const Text(
-                                    "Create Account Instead?",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ))),
-            ),
-          );
-        },
       ),
     );
   }

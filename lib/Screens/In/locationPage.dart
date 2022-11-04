@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
@@ -13,19 +16,26 @@ class LocationPage extends StatefulWidget {
   State<LocationPage> createState() => _LocationPageState();
 }
 
-const KGoogleApiKey = 'AIzaSyAi7jTovhMigqNBZP5Sw_ay744Ev7QeraQ';
+const KGoogleApiKey = 'AIzaSyDye80CnIi3pNtYYBaqm82ybEfuoJ8uDtc';
 
 final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 class _LocationPageState extends State<LocationPage> {
   // Camera position Initialization
   static const CameraPosition initialCameraPosition =
-      CameraPosition(target: LatLng(37.42796, 122.08574), zoom: 14.0);
+      CameraPosition(target: LatLng(-1.181056, 36.927234), zoom: 14.0);
 
   late Completer<GoogleMapController> _controller = Completer();
   final Mode _mode = Mode.overlay;
 
   Set<Marker> markerList = {};
+
+  String? loc;
+
+  // location variables
+  var lat1;
+  var lng1;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,8 +52,23 @@ class _LocationPageState extends State<LocationPage> {
               _controller.complete(controller);
             },
           ),
-          ElevatedButton(
-              onPressed: handlePressButton, child: const Text('Search Places'))
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                  onPressed: handlePressButton,
+                  child: const Text('Search Places')),
+              ElevatedButton(
+                  onPressed: () {
+                    // latitude result saved as 'lat1', longitude result saved as 'lng1'
+                    // serach resilt saved as 'details'
+                    FirebaseFirestore.instance.collection('Listings').add({
+                      'name': loc,
+                    });
+                  },
+                  child: const Text("Save Location"))
+            ],
+          ),
         ],
       ),
     );
@@ -81,18 +106,26 @@ class _LocationPageState extends State<LocationPage> {
 
     PlacesDetailsResponse detail = await places.getDetailsByPlaceId(p.placeId!);
 
-    final lat = detail.result.geometry!.location.lat;
-    final lng = detail.result.geometry!.location.lng;
+    final lat1 = detail.result.geometry!.location.lat;
+    final lng1 = detail.result.geometry!.location.lng;
+    final locationName = detail.result.name;
 
     markerList.clear();
     markerList.add(Marker(
         markerId: const MarkerId("0"),
-        position: LatLng(lat, lng),
-        infoWindow: InfoWindow(title: detail.result.name)));
+        position: LatLng(lat1, lng1),
+        infoWindow: InfoWindow(title: locationName
+            // detail.result.name
+            )));
+    String Loc = locationName;
 
     setState(() {});
     final GoogleMapController googleMapController = await _controller.future;
     googleMapController
-        .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
+        .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat1, lng1), 14.0));
+
+    // print(InfoWindow(title: ));
   }
 }
+
+// String locationName = InfoWindow (title)

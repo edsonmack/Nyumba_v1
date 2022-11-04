@@ -18,6 +18,12 @@ class _BookingsState extends State<Bookings> {
         height: 140,
         width: 150,
         decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage(
+                'images/one.jpg',
+              ),
+            ),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: Colors.black)),
       ),

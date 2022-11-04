@@ -53,7 +53,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           email: emailEditingController.text,
           password: passwordEditingController.text);
       addUser();
-      return const VerifyScreen();
+      Fluttertoast.showToast(msg: 'Registration successful');
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => const VerifyScreen()));
     } on FirebaseException catch (e) {
       if (e.code == 'email-already-in-use') {
         Fluttertoast.showToast(msg: 'Email is already in use');

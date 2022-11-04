@@ -20,6 +20,11 @@ class _FavoriteState extends State<Favorite> {
               height: 140,
               width: 150,
               decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: const AssetImage(
+                        'images/two.jpg',
+                      )),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.black)),
             ),

@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:nyumba/Screens/In/viewHousePage.dart';
 
@@ -38,17 +40,19 @@ class _HomePageState extends State<HomePage> {
 
   // House widget
   Widget house(
-      String? faciltyName,
-      int rent,
-      String? location,
-      IconData bedIcon,
-      String? bedType,
-      IconData amenityIcon1,
-      String? amenity1,
-      IconData amenityIcon2,
-      String? amenity2,
-      IconData amenityIcon3,
-      String? amenity3) {
+    String? faciltyName,
+    int rent,
+    String? location,
+    IconData bedIcon,
+    String? bedType,
+    IconData amenityIcon1,
+    String? amenity1,
+    IconData amenityIcon2,
+    String? amenity2,
+    IconData amenityIcon3,
+    String? amenity3,
+    String? imageName,
+  ) {
     return Builder(builder: (context) {
       return Column(
         children: [
@@ -57,6 +61,12 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               height: 200,
               decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage(
+                      'images/$imageName.jpg',
+                    ),
+                  ),
                   color: Colors.white10,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.blueAccent)),
@@ -226,7 +236,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   categoryButton('Hostels'),
-                  categoryButton('Appartments'),
+                  categoryButton('Apartments'),
                   categoryButton('Houses'),
                 ],
               ),
@@ -247,7 +257,8 @@ class _HomePageState extends State<HomePage> {
                           Icons.balcony_outlined,
                           'Balcony',
                           Icons.wifi,
-                          'Free Wifi'),
+                          'Free Wifi',
+                          'one'),
                       const SizedBox(height: 5.0),
                       const Divider(
                         height: 40.0,
@@ -264,7 +275,8 @@ class _HomePageState extends State<HomePage> {
                           Icons.balcony_outlined,
                           'Balcony',
                           Icons.wifi,
-                          'Free Wifi'),
+                          'Free Wifi',
+                          'two'),
                     ],
                   ),
                 ),

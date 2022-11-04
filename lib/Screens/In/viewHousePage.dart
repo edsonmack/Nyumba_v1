@@ -23,8 +23,15 @@ class _ViewButtonState extends State<ViewButton> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage(
+                    'images/one.jpg',
+                  ),
+                ),
+              ),
               height: 250,
-              color: Colors.blue,
             ),
             Padding(
               padding: const EdgeInsets.only(

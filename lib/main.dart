@@ -2,8 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nyumba/Screens/Out/home_page.dart';
+
 import 'cubit/google_sign/google_sign_in_cubit.dart';
 import 'firebase_options.dart';
+import 'locator.dart';
 /*
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +18,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  setUpLocator();
 
   runApp(const MyApp());
 }

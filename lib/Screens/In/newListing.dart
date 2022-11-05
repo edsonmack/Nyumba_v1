@@ -1,15 +1,15 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import 'package:image_picker/image_picker.dart';
+import 'package:nyumba/Repositories/cloud_repository.dart';
 import 'package:nyumba/Screens/In/locationPage.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:nyumba/Screens/In/profile_screen.dart';
+import 'package:nyumba/locator.dart';
 
 class NewListings extends StatefulWidget {
   const NewListings({super.key});
@@ -110,6 +110,7 @@ class _NewListingsState extends State<NewListings> {
   bool? checkBoxValue4 = false;
   bool? checkBoxValue5 = false;
   bool? checkBoxValue6 = false;
+  bool showSpinner = false;
 
   // Accomodation name textfield widget
   Widget accomodationName() {
@@ -473,6 +474,8 @@ class _NewListingsState extends State<NewListings> {
             const SizedBox(width: 10.0),
             ElevatedButton(
               onPressed: () async {
+                setState(() => showSpinner = true);
+
                 for (int i = 0; i < imageFileList.length; i++) {
                   String url = await uploadFile(imageFileList[i]);
                   downloadUrls.add(url);
@@ -481,6 +484,16 @@ class _NewListingsState extends State<NewListings> {
                     storeEntry(downloadUrls);
                   }
                 }
+                await locator.get<CloudRepository>().registerListing(
+                      facilityName: nameController.text,
+                      rentPrice: int.parse(rentController.text),
+                      facilityCategory: selectedValue ?? '',
+                      roomType: selectedValue1,
+                      location: 'location',
+                      photoUrl: '',
+                      description: descriptionController.text,
+                    );
+                setState(() => showSpinner = false);
               },
               style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(4, 36, 47, 100)),

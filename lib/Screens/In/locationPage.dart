@@ -1,13 +1,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/places.dart';
 
 class LocationPage extends StatefulWidget {
   const LocationPage({super.key});
@@ -27,7 +25,9 @@ class _LocationPageState extends State<LocationPage> {
 
   late Completer<GoogleMapController> _controller = Completer();
   final Mode _mode = Mode.overlay;
+  late final String _locationName;
 
+  String get locationName => _locationName;
   Set<Marker> markerList = {};
 
   String? loc;
@@ -87,7 +87,7 @@ class _LocationPageState extends State<LocationPage> {
             hintText: 'Search',
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
-                borderSide: BorderSide(color: Colors.white))),
+                borderSide: const BorderSide(color: Colors.white))),
         components: [Component(Component.country, "KE")]);
 
     displayPredicition(p!, homeScaffoldKey.currentState);
@@ -108,7 +108,7 @@ class _LocationPageState extends State<LocationPage> {
 
     final lat1 = detail.result.geometry!.location.lat;
     final lng1 = detail.result.geometry!.location.lng;
-    final locationName = detail.result.name;
+    _locationName = detail.result.name;
 
     markerList.clear();
     markerList.add(Marker(

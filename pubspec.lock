@@ -366,6 +366,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1"
+  get_it:
+    dependency: "direct main"
+    description:
+      name: get_it
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "7.2.0"
   google_api_headers:
     dependency: "direct main"
     description:
@@ -576,6 +583,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
+  mpesa_flutter_plugin:
+    dependency: "direct main"
+    description:
+      name: mpesa_flutter_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.6.1"
   nested:
     dependency: transitive
     description:
@@ -583,6 +597,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  overlay_support:
+    dependency: "direct main"
+    description:
+      name: overlay_support
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   package_info_plus:
     dependency: transitive
     description:

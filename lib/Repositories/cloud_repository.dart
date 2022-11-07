@@ -57,7 +57,7 @@ class CloudRepository {
   }
 
   //retrieve data from firestore
-  Stream<List<ListingModel>> getWeightList() {
+  Stream<List<ListingModel>> getListing() {
     final uid = _firebaseAuth.currentUser?.uid;
     final data = _firebaseFirestore
         .collection(listingPath)
@@ -73,12 +73,12 @@ class CloudRepository {
   }
 
   //delete data from firestore
-  Future<void> deleteWeightEntry(String id) async {
+  Future<void> deleteListing(String id) async {
     await _firebaseFirestore.collection(listingPath).doc(id).delete();
   }
 
   //update data from firestore
-  Future<void> updateWeightEntry(String id, String location) async {
+  Future<void> updateListing(String id, String location) async {
     await _firebaseFirestore
         .collection(listingPath)
         .doc(id)

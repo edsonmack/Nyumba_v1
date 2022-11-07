@@ -50,6 +50,7 @@ dependencies:
   mobx: ^2.1.1
   modal_progress_hud_nsn: ^0.3.0
   mpesa_flutter_plugin: ^1.6.1
+  overlay_support: ^2.0.1
   firebase_storage: ^10.3.11
   geocoding: ^2.0.5
   

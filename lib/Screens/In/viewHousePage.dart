@@ -1,10 +1,12 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:nyumba/Screens/In/bottomNavigator.dart';
+
+import '../../Models/listing_model.dart';
 
 class ViewButton extends StatefulWidget {
-  const ViewButton({Key? key}) : super(key: key);
+  const ViewButton({Key? key, required this.listing}) : super(key: key);
+  final ListingModel listing;
 
   @override
   State<ViewButton> createState() => _ViewButtonState();
@@ -44,16 +46,16 @@ class _ViewButtonState extends State<ViewButton> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 8.0),
-                    const Text('Winners Hostel'),
+                    Text(widget.listing.facilityName),
                     const SizedBox(height: 8.0),
-                    const Text('Rent: Ksh. 4000/ month'),
+                    Text('Rent: Ksh. ${widget.listing.rentPrice}/ month'),
                     const SizedBox(height: 8.0),
                     Row(
-                      children: const [
-                        Icon(Icons.bed),
-                        SizedBox(width: 5.0),
-                        Text('Bed-sitter 2 sharing'),
-                        SizedBox(height: 8.0),
+                      children: [
+                        const Icon(Icons.bed),
+                        const SizedBox(width: 5.0),
+                        Text(widget.listing.roomType),
+                        const SizedBox(height: 8.0),
                       ],
                     ),
                     const SizedBox(height: 8.0),

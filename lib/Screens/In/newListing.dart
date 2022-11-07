@@ -9,7 +9,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:nyumba/Repositories/cloud_repository.dart';
 import 'package:nyumba/Screens/In/locationPage.dart';
 import 'package:nyumba/Screens/In/profile_screen.dart';
+import 'package:nyumba/components/block_button_widget.dart';
 import 'package:nyumba/locator.dart';
+import 'package:nyumba/provider/notification_state.dart';
+import 'package:provider/provider.dart';
 
 class NewListings extends StatefulWidget {
   const NewListings({super.key});
@@ -42,6 +45,7 @@ class _NewListingsState extends State<NewListings> {
 */
 // Image picker object
   final ImagePicker imagePicker = ImagePicker();
+  final locationPage = const LocationPage();
 
   // array receiving list of files
   List<File> imageFileList = [];
@@ -262,7 +266,7 @@ class _NewListingsState extends State<NewListings> {
             children: [
               // checkbox1
               Checkbox(
-                tristate: true,
+                tristate: false,
                 value: checkBoxValue1,
                 onChanged: (val) {
                   setState(() {
@@ -275,7 +279,7 @@ class _NewListingsState extends State<NewListings> {
               const Text("Pets allowed"),
               // checkbox 2
               Checkbox(
-                tristate: true,
+                tristate: false,
                 value: checkBoxValue2,
                 onChanged: (val) {
                   setState(() {
@@ -294,7 +298,7 @@ class _NewListingsState extends State<NewListings> {
             children: [
               // checkbox1
               Checkbox(
-                tristate: true,
+                tristate: false,
                 value: checkBoxValue3,
                 onChanged: (val) {
                   setState(() {
@@ -307,7 +311,7 @@ class _NewListingsState extends State<NewListings> {
               const Text("CCTV Surveillance"),
               // checkbox 2
               Checkbox(
-                tristate: true,
+                tristate: false,
                 value: checkBoxValue4,
                 onChanged: (val) {
                   setState(() {
@@ -327,7 +331,7 @@ class _NewListingsState extends State<NewListings> {
             children: [
               // checkbox1
               Checkbox(
-                tristate: true,
+                tristate: false,
                 value: checkBoxValue5,
                 onChanged: (val) {
                   setState(() {
@@ -340,7 +344,7 @@ class _NewListingsState extends State<NewListings> {
               const Text("Fully furnitured "),
               // checkbox 2
               Checkbox(
-                tristate: true,
+                tristate: false,
                 value: checkBoxValue6,
                 onChanged: (val) {
                   setState(() {
@@ -435,11 +439,11 @@ class _NewListingsState extends State<NewListings> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Row(
-            children: [
+            children: const [
               //imagePreviewer(FileImage(_image!)),
-              const SizedBox(width: 10.0),
+              SizedBox(width: 10.0),
               // imagePreviewer(),
-              const SizedBox(width: 10.0),
+              SizedBox(width: 10.0),
               //imagePreviewer(),
             ],
           ),
@@ -456,52 +460,36 @@ class _NewListingsState extends State<NewListings> {
   Widget submitButtons() {
     return Column(
       children: [
-        Row(
-          children: [
-            Container(
-                child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 80.0),
-              child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey,
-                  ),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.black),
-                  )),
-            )),
-            const SizedBox(width: 10.0),
-            ElevatedButton(
-              onPressed: () async {
-                setState(() => showSpinner = true);
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: BlockButtonWidget(
+            text: 'Submit',
+            color: const Color.fromRGBO(4, 36, 47, 100),
+            callBack: () async {
+              for (int i = 0; i < imageFileList.length; i++) {
+                String url = await uploadFile(imageFileList[i]);
+                downloadUrls.add(url);
 
-                for (int i = 0; i < imageFileList.length; i++) {
-                  String url = await uploadFile(imageFileList[i]);
-                  downloadUrls.add(url);
-
-                  if (i == imageFileList.length - 1) {
-                    storeEntry(downloadUrls);
-                  }
+                if (i == imageFileList.length - 1) {
+                  storeEntry(downloadUrls);
                 }
-                await locator.get<CloudRepository>().registerListing(
-                      facilityName: nameController.text,
-                      rentPrice: int.parse(rentController.text),
-                      facilityCategory: selectedValue ?? '',
-                      roomType: selectedValue1,
-                      location: 'location',
-                      photoUrl: '',
-                      description: descriptionController.text,
-                    );
-                setState(() => showSpinner = false);
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromRGBO(4, 36, 47, 100)),
-              child: const Text('Submit'),
-            ),
-          ],
+              }
+              await locator.get<CloudRepository>().registerListing(
+                    facilityName: nameController.text,
+                    rentPrice: int.parse(rentController.text),
+                    facilityCategory: selectedValue ?? '',
+                    roomType: selectedValue1,
+                    location: '',
+                    photoUrl: '',
+                    description: descriptionController.text,
+                  );
+              if (!mounted) return;
+              Provider.of<NotificationState>(context, listen: false)
+                  .showErrorToast('Listing added', false);
+            },
+          ),
         ),
-        SizedBox(height: 8)
+        const SizedBox(height: 8)
       ],
     );
   }
